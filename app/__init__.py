@@ -47,6 +47,9 @@ def create_app(app_settings='app.config.DevelopmentConfig'):
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
+    from app.admin import bp as admin_bp
+    app.register_blueprint(admin_bp)
+
     # Setup logging
     if not app.debug and not app.config['TESTING'] and not app.config['DEV']:
         if not os.path.exists('logs'):

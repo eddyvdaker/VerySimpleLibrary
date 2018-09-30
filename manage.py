@@ -21,7 +21,11 @@ def recreate_db():
 @cli.command()
 def seed_db():
     """Seeds the database"""
-    user = User(username='admin')
+    admin = User(username='admin', admin=True)
+    admin.set_password('superstrongpassword')
+    db.session.add(admin)
+
+    user = User(username='user', admin=False)
     user.set_password('superstrongpassword')
     db.session.add(user)
     db.session.commit()

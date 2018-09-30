@@ -9,8 +9,8 @@ from app.models import User
 app = create_app(app_settings='app.config.TestingConfig')
 
 
-def add_user(username='test', password='somepassword'):
-    user = User(username=username)
+def add_user(username='test', password='somepassword', admin=False):
+    user = User(username=username, admin=admin)
     user.set_password(password)
     db.session.add(user)
     db.session.commit()

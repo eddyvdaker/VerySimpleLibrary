@@ -28,6 +28,18 @@ class TestUserModel(BaseTestCase):
         user = add_user(password='password1234')
         self.assertTrue(user.check_password('password1234'))
 
+    def test_user_admin_setting(self):
+        """Tests if the admin setting is defaulted to false."""
+        user = add_user()
+        self.assertFalse(user.admin)
+
+    def test_user_set_admin_to_true(self):
+        """Tests setting admin to true."""
+        user = add_user()
+        user.admin = True
+        db.session.commit()
+        self.assertTrue(user.admin)
+
 
 if __name__ == '__main__':
     unittest.main()
