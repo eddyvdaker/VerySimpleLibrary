@@ -1,7 +1,8 @@
 # app/auth/routes.py
 
-from flask import render_template, flash, redirect, url_for, request
-from flask_login import login_user, current_user, logout_user
+from flask import render_template, flash, redirect, url_for, request, abort, \
+    current_app
+from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
 from app.auth import bp
@@ -34,3 +35,11 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+
+@bp.route('/testing/login_required')
+@login_required
+def login_required():
+    if current_app.config['TESTING']:
+        return 'success'
+    abort(404)
