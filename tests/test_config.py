@@ -10,6 +10,7 @@ from app import create_app
 app = create_app()
 
 
+
 class TestDevelopmentConfig(TestCase):
     def create_app(self):
         app.config.from_object('app.config.DevelopmentConfig')
@@ -34,7 +35,7 @@ class TestTestingConfig(TestCase):
         self.assertTrue(app.config['TESTING'])
         self.assertTrue(
             app.config['SQLALCHEMY_DATABASE_URI'] ==
-            os.environ.get('DATABASE_URL')
+            os.environ.get('DATABASE_TEST_URL')
         )
 
 
