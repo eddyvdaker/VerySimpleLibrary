@@ -3,6 +3,7 @@ env
 .env
 app.db
 app-test.db
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

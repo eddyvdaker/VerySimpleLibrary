@@ -1,3 +1,5 @@
+# tests/test_config.py
+
 import os
 import unittest
 
@@ -10,7 +12,6 @@ from app import create_app
 app = create_app()
 
 
-
 class TestDevelopmentConfig(TestCase):
     def create_app(self):
         app.config.from_object('app.config.DevelopmentConfig')
@@ -20,8 +21,10 @@ class TestDevelopmentConfig(TestCase):
         self.assertTrue(app.config['SECRET_KEY'] == 'some-long-random-key')
         self.assertFalse(current_app is None)
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] ==
-            os.environ.get('DATABASE_URL')
+            (app.config['SQLALCHEMY_DATABASE_URI'] ==
+            os.environ.get('DATABASE_URL')) or
+            ('app.db' in app.config['SQLALCHEMY_DATABASE_URI'])
+
         )
 
 
@@ -34,8 +37,9 @@ class TestTestingConfig(TestCase):
         self.assertTrue(app.config['SECRET_KEY'] == 'some-long-random-key')
         self.assertTrue(app.config['TESTING'])
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] ==
-            os.environ.get('DATABASE_TEST_URL')
+            (app.config['SQLALCHEMY_DATABASE_URI'] ==
+            os.environ.get('DATABASE_TEST_URL')) or
+            ('app-test.db' in app.config['SQLALCHEMY_DATABASE_URI'])
         )
 
 

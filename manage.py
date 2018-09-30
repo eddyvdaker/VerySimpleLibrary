@@ -1,3 +1,5 @@
+# manage.py
+
 import unittest
 from flask.cli import FlaskGroup
 
