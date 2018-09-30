@@ -1,7 +1,6 @@
 # tests/test_auth.py
 
 import unittest
-import json
 
 from tests.base import BaseTestCase, add_user
 
@@ -80,6 +79,25 @@ class TestLogout(BaseTestCase):
         """Check if the logout link is not shown for an anonymous user."""
         response = self.client.get('/')
         self.assertNotIn(b'>Logout</a>', response.data)
+
+
+class TestAuthentication(BaseTestCase):
+    """Tests whether the authentication works."""
+
+    def test_login_required(self):
+        """Test if login required works if logged in."""
+        add_user()
+        self.login()
+        response = self.client.get('/testing/login_required')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'success', response.data)
+
+    def test_login_required_not_logged_in(self):
+        """Test if login required works if not logged in."""
+        response = self.client.get('/testing/login_required')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(b'<a href="/login?next=%2Ftesting%2Flogin_required">',
+                         response.data)
 
 
 if __name__ == '__main__':

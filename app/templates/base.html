@@ -14,6 +14,11 @@
         <a class="navbar-brand" href="{{ url_for('main.index') }}">VSL</a>
       </div>
       <div class="collapse navbar-collapse" id="navbar-collapse">
+        {% if not current_user.is_anonymous %}
+          <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
+          </ul>
+        {% endif %}
         <ul class="nav navbar-nav navbar-right">
           {% if current_user.is_anonymous %}
             <li><a href="{{ url_for('auth.login') }}">Login</a></li>
