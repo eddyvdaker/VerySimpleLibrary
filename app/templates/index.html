@@ -1,5 +1,5 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-  <p>Welcome to the VerySimpleLibrary</p>
+  <p>Welcome {% if not current_user.is_anonymous %}{{ current_user.username }}, {% endif %}to the VerySimpleLibrary</p>
 {% endblock %}
