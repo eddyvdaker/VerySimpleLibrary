@@ -19,11 +19,12 @@ mail = Mail()
 bootstrap = Bootstrap()
 
 
-def create_app():
+def create_app(app_settings='app.config.DevelopmentConfig'):
     app = Flask(__name__)
 
     # Load settings
-    app_settings = os.getenv('APP_SETTINGS')
+    if os.environ.get('app_settings'):
+        app_settings=os.environ.get('app_settings')
     app.config.from_object(app_settings)
 
     # Initialize Flask extensions
@@ -37,8 +38,11 @@ def create_app():
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    from app.auth import bp as auth_bp
+    app.register_blueprint(auth_bp)
+
     # Setup logging
-    if not app.debug and not app.testing:
+    if not app.debug and not app.config['TESTING'] and not app.config['DEV']:
         if not os.path.exists('logs'):
             os.mkdir('logs')
         file_handler = RotatingFileHandler('logs/vsl.log', maxBytes=5120,
