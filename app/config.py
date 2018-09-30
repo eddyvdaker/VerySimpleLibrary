@@ -1,3 +1,5 @@
+# app/config.py
+
 import os
 from dotenv import load_dotenv
 
@@ -10,7 +12,8 @@ class BaseConfig:
     """Base configuration"""
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = 'some-long-random-key'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'some-long-random-key'
+
 
 
 class DevelopmentConfig(BaseConfig):
