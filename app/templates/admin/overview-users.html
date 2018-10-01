@@ -2,6 +2,10 @@
 
 {% block app_content %}
   <h1>{{ title }}</h1>
+  <a id="add-button" href="{{ url_for('admin.users_add') }}">
+    <button type="button" class="btn btn-default">Add user</button>
+  </a>
+  <br><br>
   <table id="users" class="table table-striped">
     <tr>
       <th>ID</th>
