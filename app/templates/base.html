@@ -17,6 +17,9 @@
         {% if not current_user.is_anonymous %}
           <ul class="nav navbar-nav">
             <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
+            {% if current_user.admin %}
+              <li><a href="{{ url_for('admin.admin') }}">Admin</a></li>
+            {% endif %}
           </ul>
         {% endif %}
         <ul class="nav navbar-nav navbar-right">
