@@ -3,7 +3,7 @@
 from flask_testing import TestCase
 
 from app import create_app, db
-from app.models import User
+from app.models import User, Language
 
 
 app = create_app(app_settings='app.config.TestingConfig')
@@ -43,3 +43,9 @@ class BaseTestCase(TestCase):
         db.session.add(user)
         db.session.commit()
         return user
+
+    def add_language(self, code='US'):
+        language = Language(code=code)
+        db.session.add(language)
+        db.session.commit()
+        return language
