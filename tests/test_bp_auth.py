@@ -1,8 +1,8 @@
-# tests/test_auth.py
+# tests/test_bp_auth.py
 
 import unittest
 
-from tests.base import BaseTestCase, add_user
+from tests.base import BaseTestCase
 
 
 class TestLogin(BaseTestCase):
@@ -22,7 +22,7 @@ class TestLogin(BaseTestCase):
 
     def test_login_page_login(self):
         """Test if logging in through the login page works."""
-        add_user()
+        self.add_user()
         response = self.client.post(
             '/login',
             data=dict({
@@ -38,7 +38,7 @@ class TestLogin(BaseTestCase):
 
     def test_login_page_default_redirect(self):
         """Test if default redirect goes to homepage on successful login."""
-        add_user()
+        self.add_user()
         response = self.login()
         self.assertIn(b'Welcome test,', response.data)
 
@@ -49,7 +49,7 @@ class TestLogin(BaseTestCase):
 
     def test_login_link_not_shown(self):
         """Tests if the login link is not shown for logged in users."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.get('/')
         self.assertNotIn(b'>Login</a>', response.data)
@@ -60,7 +60,7 @@ class TestLogout(BaseTestCase):
 
     def test_logout(self):
         """Test the logout link."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.get('/logout')
         self.assertEqual(response.status_code, 302)
@@ -70,7 +70,7 @@ class TestLogout(BaseTestCase):
 
     def test_logout_link_shown(self):
         """Test if the logout link is shown if logged in."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.get('/')
         self.assertIn(b'>Logout</a>', response.data)
@@ -86,7 +86,7 @@ class TestAuthentication(BaseTestCase):
 
     def test_login_required(self):
         """Test if login required works if logged in."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.get('/testing/login_required')
         self.assertEqual(response.status_code, 200)

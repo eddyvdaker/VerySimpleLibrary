@@ -9,14 +9,6 @@ from app.models import User
 app = create_app(app_settings='app.config.TestingConfig')
 
 
-def add_user(username='test', password='somepassword', admin=False):
-    user = User(username=username, admin=admin)
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
-    return user
-
-
 class BaseTestCase(TestCase):
     def create_app(self):
         app.config.from_object('app.config.TestingConfig')
@@ -30,6 +22,8 @@ class BaseTestCase(TestCase):
         db.session.remove()
         db.drop_all()
 
+    """Helper methods"""
+
     def login(self, username='test', password='somepassword'):
         return self.client.post('/login', data=dict(
             username=username,
@@ -38,3 +32,10 @@ class BaseTestCase(TestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
+
+    def add_user(self, username='test', password='somepassword', admin=False):
+        user = User(username=username, admin=admin)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        return user
