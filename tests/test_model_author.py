@@ -14,6 +14,16 @@ class TestModelAuthor(BaseTestCase):
         author = Author(name='Some Author')
         self.add_to_db(author)
 
+    def test_add_book_to_author(self):
+        """Tests if it is possible to add a book to an author."""
+        author = Author(name='Some Author')
+        book = self.add_book()
+        author.books.append(book)
+        self.add_to_db(author)
+
+        author = Author.query.all()[0]
+        self.assertEqual(author.books[0], book)
+
 
 if __name__ == '__main__':
     unittest.main()
