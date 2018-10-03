@@ -3,7 +3,7 @@
 from flask_testing import TestCase
 
 from app import create_app, db
-from app.models import User, Language
+from app.models import User, Language, Author
 
 
 app = create_app(app_settings='app.config.TestingConfig')
@@ -49,3 +49,9 @@ class BaseTestCase(TestCase):
         db.session.add(language)
         db.session.commit()
         return language
+
+    def add_author(self, name='some author'):
+        author = Author(name=name)
+        db.session.add(author)
+        db.session.commit()
+        return author
