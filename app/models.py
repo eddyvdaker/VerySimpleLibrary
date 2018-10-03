@@ -19,6 +19,7 @@ class Book(db.Model):
     upload_date = db.Column(db.DateTime(), default=datetime.utcnow)
     file_hash = db.Column(db.String(128), unique=True)
     language_code = db.Column(db.String(8), db.ForeignKey('language.code'))
+    uploader_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return f'<Book {self.id}: {self.title}>'
@@ -39,6 +40,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(128), index=True, nullable=False)
     password = db.Column(db.String(128))
     admin = db.Column(db.Boolean(), default=False)
+    uploads = db.relationship('Book', backref='uploader', lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.username}>'
