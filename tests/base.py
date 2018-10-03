@@ -1,9 +1,10 @@
 # tests/base.py
 
+from datetime import date
 from flask_testing import TestCase
 
 from app import create_app, db
-from app.models import User, Language, Author
+from app.models import User, Language, Author, Book
 
 
 app = create_app(app_settings='app.config.TestingConfig')
@@ -55,3 +56,11 @@ class BaseTestCase(TestCase):
         db.session.add(author)
         db.session.commit()
         return author
+
+    def add_book(self, title='book', publish_date=date.today(), file_type='pdf',
+                 file='/tmp/some-test-book.pdf'):
+        book = Book(title='book', publish_date=date.today(), file=file,
+                    file_type='pdf')
+        db.session.add(book)
+        db.session.commit()
+        return book
