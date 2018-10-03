@@ -9,6 +9,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 
 
+book_author = db.Table(
+    'book_author',
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
+    db.Column('author_id', db.Integer, db.ForeignKey('author.id'))
+)
+
+
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(254), index=True, nullable=False)
@@ -20,6 +27,12 @@ class Book(db.Model):
     file_hash = db.Column(db.String(128), unique=True)
     language_code = db.Column(db.String(8), db.ForeignKey('language.code'))
     uploader_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    written_by = db.relationship(
+        'Author', secondary=book_author,
+        primaryjoin=(book_author.c.book_id == id),
+        backref=db.backref('books', lazy='dynamic'), lazy='dynamic'
+    )
 
     def __repr__(self):
         return f'<Book {self.id}: {self.title}>'
@@ -56,6 +69,12 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(254), index=True, nullable=False)
 
+    written = db.relationship(
+        'Book', secondary=book_author,
+        primaryjoin=(book_author.c.author_id == id),
+        backref=db.backref('authors', lazy='dynamic'), lazy='dynamic'
+    )
+
     def __repr__(self):
         return f'<Author {self.id}: {self.name}>'
 
@@ -85,6 +104,7 @@ class Language(db.Model):
                 return countries.get(name=country).alpha_2
         except KeyError:
             return 'country not found'
+
 
 @login.user_loader
 def load_user(id):

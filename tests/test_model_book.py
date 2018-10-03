@@ -63,6 +63,18 @@ class TestModelBook(BaseTestCase):
         book = Book.query.all()[0]
         self.assertEqual(book.uploader, user)
 
+    def test_adding_author(self):
+        """Tests if an author can be added to a book."""
+        author = self.add_author()
+        file = '/tmp/some-test-book.pdf'
+        book = Book(title='book', publish_date=date.today(), file=file,
+                    file_type='pdf')
+        book.authors.append(author)
+        self.add_to_db(book)
+
+        book = Book.query.all()[0]
+        self.assertEqual(book.authors[0], author)
+
 
 if __name__ == '__main__':
     unittest.main()
