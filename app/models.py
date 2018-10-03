@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from flask_login import UserMixin
+from hashlib import sha256
 from pycountry import countries
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,9 +17,20 @@ class Book(db.Model):
     file_type = db.Column(db.String(32), nullable=False, default='unknown',
                           index=True)
     upload_date = db.Column(db.DateTime(), default=datetime.utcnow)
+    file_hash = db.Column(db.String(128), unique=True)
 
     def __repr__(self):
         return f'<Book {self.id}: {self.title}>'
+
+    def set_hash(self):
+        hash_func = sha256()
+        with open(self.file, 'rb') as file:
+            while True:
+                data = file.read(65536)     # read file in chunks of 64kb
+                if not data:
+                    break
+                hash_func.update(data)
+        self.file_hash = hash_func.hexdigest()
 
 
 class User(UserMixin, db.Model):
