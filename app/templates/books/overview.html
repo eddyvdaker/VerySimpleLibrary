@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+  <h1>{{ title }}</h1>
+  <table id="books" class="table table-striped">
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Author(s)</th>
+      <th>Publish Date</th>
+      <th>File Type</th>
+      <th>Language</th>
+      <th>Upload Date</th>
+      <th>Uploader</th>
+      <th></th>
+      {% if current_user.admin %}<th></th>{% endif %}
+    </tr>
+    {% for book in books %}
+      <tr>
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{% for author in book.authors %}{{ author.name }}; {% endfor %}</td>
+        <td>{{ book.publish_date }}</td>
+        <td>{{ book.file_type }}</td>
+        <td>{{ book.language.code }}</td>
+        <td>{{ book.upload_date }}</td>
+        <td>{{ book.uploader.username }}</td>
+        <td><button>Download</button></td>
+        {% if current_user.admin %}<td><button>Delete</button></td>{% endif %}
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
