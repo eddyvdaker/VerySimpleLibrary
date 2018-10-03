@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+  <h1>{{ title }}</h1>
+  <div id="basic-information">
+    <ul class="list-unstyled">
+      <li><b>ID: </b>{{ book.id }}</li>
+      <li><b>Title: </b>{{ book.title }}</li>
+      <li><b>Authors: </b>
+        {% for author in book.authors %}
+          {{ author.name }};
+        {% endfor %}
+      </li>
+      <li><b>Published: </b>{{ book.publish_date }}</li>
+      <li><b>Language: </b>{{ book.language.code }}</li>
+      <li><b>File Type: </b>{{ book.file_type }}</li>
+      <li><b>Hash: </b>{{ book.file_hash }}</li>
+      <li><b>Uploader: </b>{{ book.uploader.username }}</li>
+    </ul>
+  </div>
+  <button>Download</button>
+{% endblock %}

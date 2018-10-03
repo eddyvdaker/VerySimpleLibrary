@@ -87,7 +87,7 @@ def recreate_db():
 @cli.command()
 def seed_db():
     """Seeds the database"""
-    admin = add_user('admin', 'superstrongpassword', admin=True)
+    add_user('admin', 'superstrongpassword', admin=True)
 
 
 @cli.command()

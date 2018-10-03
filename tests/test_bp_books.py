@@ -17,6 +17,7 @@ class TestBooks(BaseTestCase):
         self.assertIn(b'<h1>Books Overview</h1>', response.data)
         self.assertIn(b'book1', response.data)
         self.assertIn(b'book2', response.data)
+        self.assertIn(b'<a href="/books/1">book1', response.data)
 
     def test_books_overview_admin_delete_button(self):
         """Tests if the admin shows a delete button for each book."""
@@ -31,6 +32,20 @@ class TestBooks(BaseTestCase):
         self.login(username='user')
         response = self.client.get('/books')
         self.assertNotIn(b'Delete', response.data)
+
+    def test_books_delete_link(self):
+        """Tests if the delete book links works."""
+        self.seed_test_db()
+        self.login(username='admin')
+
+    def test_book_details_page(self):
+        """Tests if the book details page is available."""
+        self.seed_test_db()
+        self.login(username='user')
+        response = self.client.get('/books/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'book1', response.data)
+        self.assertNotIn(b'book2', response.data)
 
 
 if __name__ == '__main__':
