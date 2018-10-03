@@ -23,6 +23,14 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
 
+class Author(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(254), index=True, nullable=False)
+
+    def __repr__(self):
+        return f'<Author {self.id}: {self.name}>'
+
+
 class Language(db.Model):
     code = db.Column(db.String(8), primary_key=True)
 
