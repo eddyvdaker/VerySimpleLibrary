@@ -18,6 +18,7 @@ class Book(db.Model):
                           index=True)
     upload_date = db.Column(db.DateTime(), default=datetime.utcnow)
     file_hash = db.Column(db.String(128), unique=True)
+    language_code = db.Column(db.String(8), db.ForeignKey('language.code'))
 
     def __repr__(self):
         return f'<Book {self.id}: {self.title}>'
@@ -59,6 +60,7 @@ class Author(db.Model):
 
 class Language(db.Model):
     code = db.Column(db.String(8), primary_key=True)
+    books = db.relationship('Book', backref='language', lazy='dynamic')
 
     @staticmethod
     def to_name(code):

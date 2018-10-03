@@ -29,10 +29,12 @@ class TestModelBook(BaseTestCase):
         file = '/tmp/some-test-book.pdf'
         book = Book(title='book', publish_date=date.today(), file=file,
                     file_type='pdf')
-        self.add_to_db(book)
-
         lang = self.add_language()
         book.language = lang
+        self.add_to_db(book)
+
+        book = Book.query.all()[0]
+
         self.assertEqual(book.language, lang)
 
     def test_setting_hash(self):
@@ -46,10 +48,20 @@ class TestModelBook(BaseTestCase):
             os.remove(file)
         open(file, 'w+').close()
         book.set_hash()
+        self.add_to_db(book)
+        self.assertTrue(book.file_hash)
 
+    def test_adding_uploader(self):
+        """Tests if an uploader can be added to a book."""
+        user = self.add_user()
+        file = '/tmp/some-test-book.pdf'
+        book = Book(title='book', publish_date=date.today(), file=file,
+                    file_type='pdf')
+        book.uploader = user
         self.add_to_db(book)
 
-        self.assertTrue(book.file_hash)
+        book = Book.query.all()[0]
+        self.assertEqual(book.uploader, user)
 
 
 if __name__ == '__main__':
