@@ -1,10 +1,24 @@
 # app/models.py
 
-from pycountry import countries
+from datetime import datetime
 from flask_login import UserMixin
+from pycountry import countries
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login
+
+
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(254), index=True, nullable=False)
+    publish_date = db.Column(db.Date(), index=True)
+    file = db.Column(db.String(512), nullable=False, unique=True)
+    file_type = db.Column(db.String(32), nullable=False, default='unknown',
+                          index=True)
+    upload_date = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Book {self.id}: {self.title}>'
 
 
 class User(UserMixin, db.Model):
