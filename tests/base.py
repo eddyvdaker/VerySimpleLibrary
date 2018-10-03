@@ -24,6 +24,10 @@ class BaseTestCase(TestCase):
 
     """Helper methods"""
 
+    def add_to_db(self, to_add):
+        db.session.add(to_add)
+        db.session.commit()
+
     def login(self, username='test', password='somepassword'):
         return self.client.post('/login', data=dict(
             username=username,

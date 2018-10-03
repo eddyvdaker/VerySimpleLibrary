@@ -2,7 +2,6 @@
 
 import unittest
 
-from app import db
 from tests.base import BaseTestCase
 from app.models import User
 
@@ -14,8 +13,7 @@ class TestUserModel(BaseTestCase):
         """Tests if adding a user works correctly."""
         user = User(username='test')
         user.set_password('somepassword')
-        db.session.add(user)
-        db.session.commit()
+        self.add_to_db(user)
         self.assertIn(user, User.query.all())
 
     def test_user_repr(self):
@@ -35,9 +33,7 @@ class TestUserModel(BaseTestCase):
 
     def test_user_set_admin_to_true(self):
         """Tests setting admin to true."""
-        user = self.add_user()
-        user.admin = True
-        db.session.commit()
+        user = self.add_user(admin=True)
         self.assertTrue(user.admin)
 
 

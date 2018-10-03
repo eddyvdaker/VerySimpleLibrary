@@ -22,6 +22,10 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
 
+class Language(db.Model):
+    code = db.Column(db.String(8), primary_key=True)
+
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
