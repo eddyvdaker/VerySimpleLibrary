@@ -18,5 +18,8 @@
       <li><b>Uploader: </b>{{ book.uploader.username }}</li>
     </ul>
   </div>
-  <button>Download</button>
+  <button class="btn btn-default">Download</button>
+  {% if current_user.admin %}
+    <button class="btn btn-default">Delete</button>
+  {% endif %}
 {% endblock %}

@@ -25,8 +25,8 @@
         <td>{{ book.language.code }}</td>
         <td>{{ book.upload_date }}</td>
         <td>{{ book.uploader.username }}</td>
-        <td><button>Download</button></td>
-        {% if current_user.admin %}<td><button>Delete</button></td>{% endif %}
+        <td><button class="btn btn-default">Download</button></td>
+        {% if current_user.admin %}<td><button class="btn btn-default">Delete</button></td>{% endif %}
       </tr>
     {% endfor %}
   </table>
