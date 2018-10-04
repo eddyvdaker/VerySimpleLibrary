@@ -11,7 +11,11 @@
     {% for author in authors %}
       <tr>
         <td>{{ author.id }}</td>
-        <td>{{ author.name }}</td>
+        <td>
+          <a href="{{ url_for('authors.details', id=author.id) }}">
+            {{ author.name }}
+          </a>
+        </td>
         <td>{{ author.number_of_books_written() }}</td>
       </tr>
     {% endfor %}
