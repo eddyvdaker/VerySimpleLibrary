@@ -3,7 +3,7 @@
 import unittest
 
 from app.models import Author
-from tests.base import BaseTestCase
+from tests.base import BaseTestCase, db
 
 
 class TestModelAuthor(BaseTestCase):
@@ -23,6 +23,15 @@ class TestModelAuthor(BaseTestCase):
 
         author = Author.query.all()[0]
         self.assertEqual(author.books[0], book)
+
+    def test_author_book_count(self):
+        """Tests if the author book count method works correctly."""
+        author = self.add_author('author1')
+        book = self.add_book()
+        self.assertEqual(author.number_of_books_written(), 0)
+        author.books.append(book)
+        db.session.commit()
+        self.assertEqual(author.number_of_books_written(), 1)
 
 
 if __name__ == '__main__':
