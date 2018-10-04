@@ -8,7 +8,7 @@
       <li><b>Title: </b>{{ book.title }}</li>
       <li><b>Authors: </b>
         {% for author in book.authors %}
-          {{ author.name }};
+          <a href="{{ url_for('authors.details', id=author.id) }}">{{ author.name }}</a>;
         {% endfor %}
       </li>
       <li><b>Published: </b>{{ book.publish_date }}</li>
