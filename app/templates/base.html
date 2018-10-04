@@ -16,17 +16,18 @@
       <div class="collapse navbar-collapse" id="navbar-collapse">
         {% if not current_user.is_anonymous %}
           <ul class="nav navbar-nav">
-            <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
             <li><a href="{{ url_for('books.overview') }}">Books</a></li>
-            {% if current_user.admin %}
-              <li><a href="{{ url_for('admin.admin') }}">Admin</a></li>
-            {% endif %}
+            <li><a href="{{ url_for('authors.overview') }}">Authors</a></li>
           </ul>
         {% endif %}
         <ul class="nav navbar-nav navbar-right">
           {% if current_user.is_anonymous %}
             <li><a href="{{ url_for('auth.login') }}">Login</a></li>
           {% else %}
+            {% if current_user.admin %}
+              <li><a href="{{ url_for('admin.admin') }}">Admin</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
             <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
           {% endif %}
         </ul>

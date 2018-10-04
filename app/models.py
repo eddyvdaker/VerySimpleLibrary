@@ -78,6 +78,9 @@ class Author(db.Model):
     def __repr__(self):
         return f'<Author {self.id}: {self.name}>'
 
+    def number_of_books_written(self):
+        return len(list(self.books))
+
 
 class Language(db.Model):
     code = db.Column(db.String(8), primary_key=True)

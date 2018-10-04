@@ -10,7 +10,7 @@ from app.models import Book
 @bp.route('/books')
 @login_required
 def overview():
-    books = Book.query.all()
+    books = Book.query.order_by(Book.title).all()
     return render_template('books/overview.html', title='Books Overview',
                            books=books)
 
