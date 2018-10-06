@@ -2,6 +2,7 @@
 
 import unittest
 
+from app.models import Book
 from tests.base import BaseTestCase
 
 
@@ -46,6 +47,21 @@ class TestBooks(BaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'book1', response.data)
         self.assertNotIn(b'book2', response.data)
+
+    def test_book_delete(self):
+        """Tests if the book delete page works correctly."""
+        self.seed_test_db()
+        self.login(username='admin')
+        response = self.client.post(
+            '/books/1/delete',
+            data=dict({
+                'confirmation': True
+            }),
+            content_type='application/x-www-form-urlencoded'
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(b'<a href="/books', response.data)
+        self.assertNotIn('book1', [x.title for x in Book.query.all()])
 
 
 if __name__ == '__main__':

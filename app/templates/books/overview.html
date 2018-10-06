@@ -29,8 +29,16 @@
         <td>{{ book.language.code }}</td>
         <td>{{ book.upload_date }}</td>
         <td>{{ book.uploader.username }}</td>
-        <td><button class="btn btn-default">Download</button></td>
-        {% if current_user.admin %}<td><button class="btn btn-default">Delete</button></td>{% endif %}
+        <td>
+          <button class="btn btn-default">Download</button>
+        </td>
+        {% if current_user.admin %}
+          <td>
+            <a href="{{ url_for('books.delete_book', id=book.id) }}">
+              <button class="btn btn-default">Delete</button>
+            </a>
+          </td>
+        {% endif %}
       </tr>
     {% endfor %}
   </table>

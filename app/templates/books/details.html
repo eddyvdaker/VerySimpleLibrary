@@ -20,6 +20,8 @@
   </div>
   <button class="btn btn-default">Download</button>
   {% if current_user.admin %}
-    <button class="btn btn-default">Delete</button>
+    <a href="{{ url_for('books.delete_book', id=book.id) }}">
+      <button class="btn btn-default">Delete</button>
+    </a>
   {% endif %}
 {% endblock %}
