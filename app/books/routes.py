@@ -1,13 +1,19 @@
 # app/books/routes.py
 
-from flask import render_template, abort, flash, redirect, url_for
-from flask_login import login_required
+import os
+
+from datetime import datetime
+from flask import render_template, abort, flash, redirect, url_for, current_app
+from flask_login import login_required, current_user
+from secrets import token_urlsafe
+from shutil import copyfile
 
 from app import db
 from app.admin.decorator import admin_required
 from app.books import bp
-from app.books.forms import DeleteConfirmation
-from app.models import Book
+from app.books.forms import DeleteConfirmation, UploadBookForm, BookMetaDataForm
+from app.books.metadata import get_meta_data
+from app.models import Book, Language, Author
 
 
 @bp.route('/books')
@@ -37,6 +43,7 @@ def delete_book(id):
     form = DeleteConfirmation()
     if form.validate_on_submit():
         if form.confirmation.data:
+            os.remove(book.file)
             for author in book.authors:
                 book.authors.remove(author)
             db.session.commit()
@@ -46,3 +53,73 @@ def delete_book(id):
             return redirect(url_for('books.overview'))
     return render_template('books/delete.html', title=f'Delete {book.title}',
                            form=form)
+
+
+@bp.route('/books/upload', methods=['GET', 'POST'])
+@login_required
+def upload_book():
+    form = UploadBookForm()
+    if form.validate_on_submit():
+        filename = token_urlsafe(10)
+        path = os.path.join(current_app.config['TMP_FOLDER'], filename)
+        form.file.data.save(path)
+        return redirect(url_for('books.edit_upload_metadata', file=filename))
+    return render_template('books/upload.html', form=form, title='Upload Book')
+
+
+@bp.route('/books/upload/<file>', methods=['GET', 'POST'])
+@login_required
+def edit_upload_metadata(file):
+    form = BookMetaDataForm()
+    tmp_path = os.path.join(current_app.config['TMP_FOLDER'], file)
+
+    form.language.choices = [(l.code, l.to_name(l.code)) for l in
+                             Language.query.all()]
+    form.file_type.choices = [(ft, ft) for ft in
+                              current_app.config['FILE_TYPES']]
+
+    if form.validate_on_submit():
+        filename = (form.title.data + '.' + form.file_type.data).\
+            replace(' ', '_')
+        new_path = os.path.join(current_app.config['FILE_FOLDER'], filename)
+
+        if not os.path.exists(current_app.config['FILE_FOLDER']):
+            os.mkdir(current_app.config['FILE_FOLDER'])
+
+        copyfile(tmp_path, new_path)
+        os.remove(tmp_path)
+
+        book = Book(title=form.title.data, file_type=form.file_type.data,
+                    file=new_path)
+
+        if form.publish_date.data:
+            book.publish_date = form.publish_date.data
+        lang = Language.query.filter_by(code=form.language.data).first()
+        if lang:
+            book.language = lang
+        book.set_hash()
+        book.uploader = current_user
+
+        author_names = form.authors.data.split(';')
+        for author_name in author_names:
+            author_name = author_name.strip()
+            author = Author.query.filter_by(name=author_name).first()
+            if not author:
+                author = Author(name=author_name)
+                db.session.add(author)
+                db.session.commit()
+            book.authors.append(author)
+        db.session.add(book)
+        db.session.commit()
+        flash(f'Uploaded {book.title}')
+        return redirect(url_for('books.details', id=book.id))
+    else:
+        metadata = get_meta_data(tmp_path)
+        form.title.data = metadata['title']
+        form.authors.data = metadata['authors']
+        form.language.data = metadata['language']
+        form.file_type.data = metadata['file_type']
+        form.publish_date.data = datetime.strptime(metadata['publish_date'],
+                                                   '%Y-%m-%d')
+    return render_template('books/edit_metadata.html', form=form,
+                           title='Edit Meta Data')

@@ -3,6 +3,8 @@ blinker==1.4
 Click==7.0
 coverage==4.5.1
 dominate==2.3.4
+epub-meta==0.0.7
+filetype==1.0.1
 Flask==1.0.2
 Flask-Bootstrap==3.3.7.1
 Flask-Login==0.4.1
@@ -13,9 +15,11 @@ Flask-Testing==0.7.1
 Flask-WTF==0.14.2
 itsdangerous==0.24
 Jinja2==2.10
+langdetect==1.0.7
 Mako==1.0.7
 MarkupSafe==1.0
 pycountry==18.5.26
+PyPDF2==1.26.0
 python-dateutil==2.7.3
 python-dotenv==0.9.1
 python-editor==1.0.3

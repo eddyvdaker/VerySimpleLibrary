@@ -5,6 +5,7 @@ import unittest
 
 from datetime import date
 from flask.cli import FlaskGroup
+from pycountry import countries
 
 from app import create_app, db
 from app.models import User, Author, Language, Book
@@ -88,6 +89,8 @@ def recreate_db():
 def seed_db():
     """Seeds the database"""
     add_user('admin', 'superstrongpassword', admin=True)
+    for lang in countries:
+        add_language(lang.alpha_2)
 
 
 @cli.command()
