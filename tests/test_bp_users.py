@@ -1,9 +1,9 @@
-# tests/test_users.py
+# tests/test_bp_users.py
 
 import unittest
 
 from app.models import User
-from tests.base import BaseTestCase, add_user
+from tests.base import BaseTestCase
 
 
 class TestProfile(BaseTestCase):
@@ -11,7 +11,7 @@ class TestProfile(BaseTestCase):
 
     def test_profile_page(self):
         """Test if the users page is available."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.get('/profile')
         self.assertEqual(response.status_code, 200)
@@ -28,7 +28,7 @@ class TestProfile(BaseTestCase):
 
     def test_change_password_page(self):
         """Tests if the change password page is available."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.get('/change_password')
         self.assertEqual(response.status_code, 200)
@@ -36,7 +36,7 @@ class TestProfile(BaseTestCase):
 
     def test_change_password(self):
         """Tests if changing the password through the profile page works."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.post(
             '/change_password',

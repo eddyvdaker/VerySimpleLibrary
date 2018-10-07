@@ -1,8 +1,8 @@
-# tests/test_errors.py
+# tests/test_bp_errors.py
 
 import unittest
 
-from tests.base import BaseTestCase, add_user
+from tests.base import BaseTestCase
 
 
 class TestErrorHandling(BaseTestCase):
@@ -10,7 +10,7 @@ class TestErrorHandling(BaseTestCase):
 
     def test_403_error(self):
         """Test 403 forbidden error handling."""
-        add_user()
+        self.add_user()
         self.login()
         response = self.client.get('/admin')
         self.assertEqual(response.status_code, 403)

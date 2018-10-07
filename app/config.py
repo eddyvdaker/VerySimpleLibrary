@@ -14,6 +14,8 @@ class BaseConfig:
     DEV = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'some-long-random-key'
+    TMP_FOLDER = os.environ.get('TMP_FOLDER') or os.path.abspath('/tmp')
+    FILE_TYPES = os.environ.get('FILE_TYPES') or ['pdf', 'epub', 'mobi']
 
 
 class DevelopmentConfig(BaseConfig):
@@ -21,6 +23,7 @@ class DevelopmentConfig(BaseConfig):
     DEV = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
+    FILE_FOLDER = os.path.abspath(os.path.join(basedir, './files'))
 
 
 class TestingConfig(BaseConfig):
@@ -29,8 +32,11 @@ class TestingConfig(BaseConfig):
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_TEST_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app-test.db')
+    FILE_FOLDER = os.path.abspath('/tmp')
 
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    FILE_FOLDER = os.environ.get('FILE_FOLDER')
+    FILE_FOLDER = os.path.abspath(os.path.join(basedir, './files'))

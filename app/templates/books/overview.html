@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+  <h1>{{ title }}</h1>
+  <a href="{{ url_for('books.upload_book') }}">
+    <button class="btn btn-default">Upload</button>
+  </a>
+  <hr>
+  <table id="books" class="table table-striped">
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Author(s)</th>
+      <th>Publish Date</th>
+      <th>File Type</th>
+      <th>Language</th>
+      <th>Upload Date</th>
+      <th>Uploader</th>
+      <th></th>
+      {% if current_user.admin %}<th></th>{% endif %}
+    </tr>
+    {% for book in books %}
+      <tr>
+        <td>{{ book.id }}</td>
+        <td><a href="{{ url_for('books.details', id=book.id) }}">{{ book.title }}</a></td>
+        <td>
+          {% for author in book.authors %}
+            <a href="{{ url_for('authors.details', id=author.id) }}">{{ author.name }}</a>;
+          {% endfor %}
+        </td>
+        <td>{{ book.publish_date }}</td>
+        <td>{{ book.file_type }}</td>
+        <td>{{ book.language.code }}</td>
+        <td>{{ book.upload_date }}</td>
+        <td>{{ book.uploader.username }}</td>
+        <td>
+          <a href="{{ url_for('books.download', id=book.id) }}">
+            <button class="btn btn-default">Download</button>
+          </a>
+        </td>
+        {% if current_user.admin %}
+          <td>
+            <a href="{{ url_for('books.delete_book', id=book.id) }}">
+              <button class="btn btn-default">Delete</button>
+            </a>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

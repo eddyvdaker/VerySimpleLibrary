@@ -1,6 +1,6 @@
-# tests/test_admin.py
+# tests/test_bp_admin.py
 
-from tests.base import BaseTestCase, add_user
+from tests.base import BaseTestCase
 from app.models import User
 
 
@@ -9,7 +9,7 @@ class TestAdminPanel(BaseTestCase):
 
     def test_admin_panel(self):
         """Tests if the admin panel is available for an admin."""
-        add_user(admin=True)
+        self.add_user(admin=True)
         self.login()
 
         response = self.client.get('/admin')
@@ -18,7 +18,7 @@ class TestAdminPanel(BaseTestCase):
 
     def test_admin_user_overview(self):
         """Tests if the user overview is available."""
-        add_user(admin=True)
+        self.add_user(admin=True)
         self.login()
 
         response = self.client.get('/admin/users')
@@ -29,7 +29,7 @@ class TestAdminPanel(BaseTestCase):
 
     def test_admin_adding_user(self):
         """Tests adding new users."""
-        add_user(admin=True)
+        self.add_user(admin=True)
         self.login()
 
         self.assertEqual(len(User.query.all()), 1)

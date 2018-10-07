@@ -1,4 +1,4 @@
-# tests/test_main.py
+# tests/test_bp_main.py
 
 import unittest
 
