@@ -3,7 +3,9 @@
 import os
 
 from datetime import datetime
-from flask import render_template, abort, flash, redirect, url_for, current_app
+from filetype import types
+from flask import render_template, abort, flash, redirect, url_for, send_file, \
+    current_app
 from flask_login import login_required, current_user
 from secrets import token_urlsafe
 from shutil import copyfile
@@ -181,3 +183,26 @@ def edit_upload_metadata(file):
                                                    '%Y-%m-%d')
     return render_template('books/edit_metadata.html', form=form,
                            title='Edit Meta Data')
+
+
+@bp.route('/books/<int:id>/download')
+@login_required
+def download(id):
+    book = Book.query.filter_by(id=id).first()
+    if not book:
+        abort(404)
+
+    mimetype = None
+    for t in types:
+        if book.file_type == t.extension:
+            mimetype = t.mime
+            break
+    if not mimetype:
+        mimetype = 'application/octet-stream'
+
+    return send_file(
+        book.file,
+        mimetype=mimetype,
+        attachment_filename=f'{book.title}.{book.file_type}',
+        as_attachment=True
+    )

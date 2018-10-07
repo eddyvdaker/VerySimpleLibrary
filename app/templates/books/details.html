@@ -18,7 +18,9 @@
       <li><b>Uploader: </b>{{ book.uploader.username }}</li>
     </ul>
   </div>
-  <button class="btn btn-default">Download</button>
+  <a href="{{ url_for('books.download', id=book.id) }}">
+    <button class="btn btn-default">Download</button>
+  </a>
   <a href="{{ url_for('books.edit_book', id=book.id) }}">
     <button class="btn btn-default">Edit</button>
   </a>

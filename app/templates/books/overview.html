@@ -34,7 +34,9 @@
         <td>{{ book.upload_date }}</td>
         <td>{{ book.uploader.username }}</td>
         <td>
-          <button class="btn btn-default">Download</button>
+          <a href="{{ url_for('books.download', id=book.id) }}">
+            <button class="btn btn-default">Download</button>
+          </a>
         </td>
         {% if current_user.admin %}
           <td>
