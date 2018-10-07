@@ -6,6 +6,7 @@ from functools import wraps
 
 
 def admin_required(func):
+    """Decorator for checking admin status of a user."""
     @wraps(func)
     def wrapper(*args, **kw):
         if not current_user.is_anonymous:

@@ -19,6 +19,9 @@
     </ul>
   </div>
   <button class="btn btn-default">Download</button>
+  <a href="{{ url_for('books.edit_book', id=book.id) }}">
+    <button class="btn btn-default">Edit</button>
+  </a>
   {% if current_user.admin %}
     <a href="{{ url_for('books.delete_book', id=book.id) }}">
       <button class="btn btn-default">Delete</button>

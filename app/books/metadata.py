@@ -95,6 +95,7 @@ def get_epub_meta_data(path):
 
 
 def get_meta_data(path):
+    """Generic function for extracting metadata from a file."""
     type = filetype.guess(path).extension
 
     if type == 'pdf':

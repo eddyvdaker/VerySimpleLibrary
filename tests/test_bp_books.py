@@ -63,6 +63,30 @@ class TestBooks(BaseTestCase):
         self.assertIn(b'<a href="/books', response.data)
         self.assertNotIn('book1', [x.title for x in Book.query.all()])
 
+    # TODO figure out how to test file handling
+
+    def test_edit_book_meta(self):
+        """Tests if editing a book meta data works currectly."""
+        self.seed_test_db()
+        self.login(username='admin')
+        response = self.client.post(
+            '/books/1/edit',
+            data=dict({
+                'title': 'edited',
+                'authors': 'edited1; edited2',
+                'language': 'US',
+                'file_type': 'pdf',
+                'publish_data': '2011-01-01'
+            }),
+            content_type='application/x-www-form-urlencoded'
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(b'<a href="/books/1"', response.data)
+
+        book = Book.query.filter_by(id=1).first()
+        self.assertEqual(book.title, 'edited')
+        self.assertEqual(len(list(book.authors)), 2)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -55,6 +55,64 @@ def delete_book(id):
                            form=form)
 
 
+@bp.route('/books/<int:id>/edit', methods=['GET', 'POST'])
+@admin_required
+def edit_book(id):
+    book = Book.query.filter_by(id=id).first()
+    if not book:
+        abort(404)
+    form = BookMetaDataForm()
+
+    form.language.choices = [(l.code, l.to_name(l.code)) for l in
+                             Language.query.all()]
+    form.file_type.choices = [(ft, ft) for ft in
+                              current_app.config['FILE_TYPES']]
+
+    if form.validate_on_submit():
+        book.title = form.title.data
+
+        for author in book.authors:
+            book.authors.remove(author)
+
+        author_names = form.authors.data.split(';')
+        for author_name in author_names:
+            author_name = author_name.strip()
+            author = Author.query.filter_by(name=author_name).first()
+            if not author:
+                author = Author(name=author_name)
+                db.session.add(author)
+                db.session.commit()
+            book.authors.append(author)
+
+        lang = Language.query.filter_by(code=form.language.data).first()
+        book.language = lang
+
+        book.publish_date = form.publish_date.data
+
+        book.file_type = form.file_type.data
+
+        db.session.commit()
+        flash('Book information updated')
+        return redirect(url_for('books.details', id=book.id))
+    else:
+        form.title.data = book.title
+
+        authors = ""
+        for i, author in enumerate(book.authors):
+            if i:
+                authors += '; ' + author.name
+            else:
+                authors += author.name
+        form.authors.data = authors
+
+        form.language.data = book.language.code
+        form.file_type.data = book.file_type
+
+        form.publish_date.data = book.publish_date
+    return render_template('books/edit_metadata.html', title='Edit Metadata',
+                           form=form)
+
+
 @bp.route('/books/upload', methods=['GET', 'POST'])
 @login_required
 def upload_book():
